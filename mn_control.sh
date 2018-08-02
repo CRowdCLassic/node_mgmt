@@ -43,8 +43,8 @@ function d_start ()
                 mkdir -p $RUN_DIR
          fi
 	 echo  "Masternode $MN_NAME $NODE : starting..."
-	 #echo "$BIN_DIR/$MNPROG -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $REINDEX"
-	 $BIN_DIR/$MNPROG -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $REINDEX
+	 #echo "$BIN_DIR/$MN_PROG -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $REINDEX"
+	 $BIN_DIR/$MN_PROG -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $REINDEX
 	 sleep  1 
 	done
 }
@@ -58,7 +58,7 @@ function d_stop ()
 	 DATA_DIR=$DBROOT_DIR/$NODE
 	 PIDFILE=$RUN_DIR/$NODE.pid
 	 echo  "Masternode $MN_NAME $NODE : stopping (PID = $(cat $PIDFILE) )" 
-	 $BIN_DIR/$MNCLI -conf=$CONF -datadir=$DATA_DIR stop
+	 $BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR stop
 	done
 }
 
@@ -70,7 +70,7 @@ function d_status ()
 	 NODE=`basename $CONF .conf`
 	 DATA_DIR=$DBROOT_DIR/$NODE
 	 PIDFILE=$RUN_DIR/$NODE.pid
-	 MN_DEBUG=`$BIN_DIR/$MNCLI  -conf=$CONF -datadir=$DATA_DIR masternode debug 2>&1`
+	 MN_DEBUG=`$BIN_DIR/$M_NCLI -conf=$CONF -datadir=$DATA_DIR masternode debug 2>&1`
 	 if [[ $? = 0 ]] ; then
 		MN_CONF="OK"
 		if [[ $MN_DEBUG = "Masternode successfully started"  ]]; then
@@ -83,7 +83,7 @@ function d_status ()
 		MN_DEBUG=`echo -e "${Red}${MN_DEBUG}${Color_Off}"`
 	 fi
 
-	 MNSYNC=`$BIN_DIR/$MNCLI  -conf=$CONF -datadir=$DATA_DIR mnsync status 2>&1`
+	 MNSYNC=`$BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR mnsync status 2>&1`
 	 if [[ $? = 0 ]] ; then
 		MN_SYNC="OK"
 		SYNC_STATUS=`echo $MNSYNC | jsonValue "AssetName"`
@@ -92,7 +92,7 @@ function d_status ()
 		SYNC_STATUS="NA";
 	 fi
 	 
-	 GETINFO=`$BIN_DIR/$MNCLI  -conf=$CONF -datadir=$DATA_DIR getinfo 2>&1`
+	 GETINFO=`$BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR getinfo 2>&1`
 	 if [[ $? = 0 ]] ; then
 		MN_GETINFO="OK"
 	 	BLOCKS=`echo $GETINFO | jsonValue blocks`
@@ -108,7 +108,7 @@ function d_status ()
 		PEERS="NA";
 	 fi
 	 echo "------------------------------------"
-	 echo "Masternode $MNNAME  - $NODE" 
+	 echo "Masternode $MN_NAME  - $NODE" 
 	 echo "------------------------------------"
 	 echo "Masternode Debug : $MN_DEBUG" 
 	 echo "Masternode Sync  : $SYNC_STATUS"
@@ -149,7 +149,7 @@ while [ "$1" != "" ]; do
     shift
 done
 
-#cleaning the command
+#cleaning the command from whitespace - trim
 CMD="$(echo -e "${TMPCMD}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
 if [[ $CMD = "" ]] ;then
