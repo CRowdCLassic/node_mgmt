@@ -11,78 +11,20 @@ if [[ ! "$CONF_FLAG" == 1 ]]; then
  exit 1
 fi
 
+#display usage
 function mn_usage() {
 	echo  "Usage: $0  [-n|--node=<nodeid>] { start | stop | restart | status }" 
 }
 
-
-#Read the command to run
-TMPCMD=""
-MODE=""
-
-while [ "$1" != "" ]; do
-    PARAM=`echo $1 | awk -F= '{print $1}'`
-    VALUE=`echo $1 | awk -F= '{print $2}'`
-    case $PARAM in
-        -n|--node)
-            NODE=node$VALUE
-            ;;
-        -r|--reindex)
-            REINDEX="-reindex"
-            ;;
-        -s|--silent)
-            MODE="silent"
-            ;;
-        *)
-	    if [[ ! -z $VALUE ]]; then
-		TMPCMD+=" ${PARAM} ${VALUE}"
-	    else
-		TMPCMD+=" ${PARAM}"
-	    fi
-	    ;;
-    esac
-    shift
-done
-CMD="$(echo -e "${TMPCMD}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
-
-if [[ $CMD = "" ]] ;then
-	echo "==== Missing Cli Command ===="
-	echo ""
-	mn_usage
-	echo ""
-	exit 1
-fi
-
-
-
-if [[ ${NODE:+1} ]] ; then
-	CONF_FILES="$MN_DIR/etc/$NODE.conf"
-else 
-	CONF_FILES="$MN_DIR/etc/node*.conf"
-	if [[ $MODE != "silent"  ]]; then 
-	  while true; do
-		read -p "Are you sure you want to run the command on all nodes ? [Y] | N : " yn
-		case $yn in
-			[Yy]* )
-				break;;
-			[Nn]* )
-				mn_usage
-				echo ""
-				exit;;
-			* )
-				break;;
-		esac
-	  done
-	fi
-fi
-
+#grab json value
 function jsonValue() {
-KEY=$1
-num=1
-temp=`awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/\042'$KEY'\042/){print $(i+1)}}}' | tr -d '"' | sed -n ${num}p`
-echo ${temp//[[:blank:]]/}
+	KEY=$1
+	num=1
+	temp=`awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/\042'$KEY'\042/){print $(i+1)}}}' | tr -d '"' | sed -n ${num}p`
+	echo ${temp//[[:blank:]]/}
 }
 
+#start function
 function d_start () 
 { 
 	for CONF in $CONF_FILES
@@ -105,7 +47,8 @@ function d_start ()
 	 sleep  1 
 	done
 }
- 
+
+#stop function
 function d_stop () 
 { 
 	for CONF in $CONF_FILES
@@ -117,7 +60,8 @@ function d_stop ()
 	 $BIN_DIR/$MNCLI -conf=$CONF -datadir=$DATA_DIR stop
 	done
 }
- 
+
+#status function
 function d_status () 
 { 
 	for CONF in $CONF_FILES
@@ -175,8 +119,67 @@ function d_status ()
 	done
 }
  
-# Some Things That run always 
-#touch  / var / lock / deluge
+#Init variable
+TMPCMD=""
+MODE=""
+
+#Read the command to run
+while [ "$1" != "" ]; do
+    PARAM=`echo $1 | awk -F= '{print $1}'`
+    VALUE=`echo $1 | awk -F= '{print $2}'`
+    case $PARAM in
+        -n|--node)
+            NODE=node$VALUE
+            ;;
+        -r|--reindex)
+            REINDEX="-reindex"
+            ;;
+        -s|--silent)
+            MODE="silent"
+            ;;
+        *)
+	    if [[ ! -z $VALUE ]]; then
+		TMPCMD+=" ${PARAM} ${VALUE}"
+	    else
+		TMPCMD+=" ${PARAM}"
+	    fi
+	    ;;
+    esac
+    shift
+done
+
+#cleaning the command
+CMD="$(echo -e "${TMPCMD}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+
+if [[ $CMD = "" ]] ;then
+	echo "==== Missing Cli Command ===="
+	echo ""
+	mn_usage
+	echo ""
+	exit 1
+fi
+
+#Get scope of the command 
+if [[ ${NODE:+1} ]] ; then
+	CONF_FILES="$MN_DIR/etc/$NODE.conf"
+else 
+	CONF_FILES="$MN_DIR/etc/node*.conf"
+	if [[ $MODE != "silent"  ]]; then 
+	  while true; do
+		read -p "Are you sure you want to run the command on all nodes ? [Y] | N : " yn
+		case $yn in
+			[Yy]* )
+				break;;
+			[Nn]* )
+				mn_usage
+				echo ""
+				exit;;
+			* )
+				break;;
+		esac
+	  done
+	fi
+fi
  
 # Management instructions of the service 
 case  "$CMD"  in 
@@ -199,5 +202,5 @@ case  "$CMD"  in
 	exit  1 
 	;; 
 esac
- 
+
 exit  0
