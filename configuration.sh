@@ -9,8 +9,8 @@ MNFULLNAME="Crowdcoin (CRC) Masternode"
 MNPROG="crowdcoind"
 MNCLI="crowdcoin-cli"
 
-MNUSER=sysadmin
-MNGROUP=sysadmin
+MNUSER=crowdcoin_user
+MNGROUP=crowdcoin_group
 
 MN_DIR="$ROOT_DIR/$MNNAME"
 BIN_DIR="$MN_DIR/bin"
