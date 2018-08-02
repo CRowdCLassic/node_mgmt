@@ -1,6 +1,7 @@
 #!/bin/bash
-# This script is a cli wrapper to control multiple node on 1 machine
+# This script is a cli wrapper to control multiple Masternode on 1 machine
 #
+
 #Loading configuration
 basedir=`echo $(dirname $0)`
 . $basedir/configuration.sh
@@ -19,8 +20,11 @@ function cli_usage()
 	echo "if no idx provided, <cli command> will apply to all nodes !!"
 }
 
+#init variable
 TMPCMD=""
 LINE=$1
+
+#Read the command to run
 while [ "$1" != "" ]; do
     PARAM=`echo $1 | awk -F'=' '{print $1}'`
     VALUE=`echo $1 | awk -F'=' '{print $2}'`
@@ -38,6 +42,8 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
+
+#Cleaning the command from whitespace - trim
 CMD="$(echo -e "${TMPCMD}" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
 
 if [[ $CMD = "" ]] ;then
@@ -48,7 +54,7 @@ if [[ $CMD = "" ]] ;then
         exit 1
 fi
 
-
+#Get scope of the command
 if [[ ${NODE:+1} ]] ; then
         CONF_FILES="$MN_DIR/etc/$NODE.conf"
 else
@@ -70,8 +76,10 @@ else
 
 fi
 
+#display command scope
 echo "This command will apply on $CONF_FILES"
 
+#Running the command
 for CONF in $CONF_FILES
    do
    	NODE=`basename $CONF.conf`
@@ -85,7 +93,7 @@ for CONF in $CONF_FILES
         if [[ ! -e $RUN_DIR ]]; then
                mkdir -p $RUN_DIR
         fi
-        $BIN_DIR/$MNCLI -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $CMD
+        $BIN_DIR/$MN_CLI -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $CMD
   done
 
 
