@@ -1,6 +1,7 @@
 #!/bin/bash
-#This script permit to stop or start the Masternode
-#
+# This script permit to stop or start one or several Masternodes
+# it also display curent status of the masternode with color output
+# 
 
 #Loading configuration
 basedir=`echo $(dirname $0)`
