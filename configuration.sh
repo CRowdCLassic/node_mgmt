@@ -1,18 +1,18 @@
 #!/bin/bash
 CONF_FLAG=1
 ROOT_DIR="/opt/node"
-MNNAME="Crowdcoin"
+MN_NAME="Crowdcoin"
 
 #Short Name should not contain space
-MNSHORTNAME="CRC"
-MNFULLNAME="Crowdcoin (CRC) Masternode"
-MNPROG="crowdcoind"
-MNCLI="crowdcoin-cli"
+MN_SHORTNAME="CRC"
+MN_FULLNAME="Crowdcoin (CRC) Masternode"
+MN_PROG="crowdcoind"
+MN_CLI="crowdcoin-cli"
 
-MNUSER=crowdcoin_user
-MNGROUP=crowdcoin_group
+MN_USER=crowdcoin_user
+MN_GROUP=crowdcoin_group
 
-MN_DIR="$ROOT_DIR/$MNNAME"
+MN_DIR="$ROOT_DIR/$MN_NAME"
 BIN_DIR="$MN_DIR/bin"
 CONF_DIR="$MN_DIR/etc"
 DBROOT_DIR="$MN_DIR/var/lib"
