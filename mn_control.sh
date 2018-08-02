@@ -70,7 +70,7 @@ function d_status ()
 	 NODE=`basename $CONF .conf`
 	 DATA_DIR=$DBROOT_DIR/$NODE
 	 PIDFILE=$RUN_DIR/$NODE.pid
-	 MN_DEBUG=`$BIN_DIR/$M_NCLI -conf=$CONF -datadir=$DATA_DIR masternode debug 2>&1`
+	 MN_DEBUG=`$BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR masternode debug 2>&1`
 	 if [[ $? = 0 ]] ; then
 		MN_CONF="OK"
 		if [[ $MN_DEBUG = "Masternode successfully started"  ]]; then
