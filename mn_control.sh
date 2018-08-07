@@ -192,7 +192,7 @@ case  "$CMD"  in
 		;; 
 	restart )
 		d_stop
-		sleep  1
+		sleep  5
 		d_start
 		;; 
 	status )
