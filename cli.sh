@@ -82,17 +82,10 @@ echo "This command will apply on $CONF_FILES"
 #Running the command
 for CONF in $CONF_FILES
    do
-   	NODE=`basename $CONF.conf`
+	NODE=${CONF_FILE%%.*}
         DATA_DIR=$DBROOT_DIR/$NODE
         PIDFILE=$RUN_DIR/$NODE.pid
         cd $MN_DIR
-        #Create database folder if not exist
-        if [[ ! -e $DATA_DIR ]]; then
-               mkdir -p $DATA_DIR
-        fi
-        if [[ ! -e $RUN_DIR ]]; then
-               mkdir -p $RUN_DIR
-        fi
         $BIN_DIR/$MN_CLI -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $CMD
   done
 
