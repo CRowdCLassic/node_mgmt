@@ -1,6 +1,6 @@
 #!/bin/bash
 CONF_FLAG=1
-ROOT_DIR="/opt/node"
+ROOT_DIR="/opt/nodes"
 MN_NAME="Crowdcoin"
 
 #Short Name should not contain space
@@ -15,7 +15,7 @@ MN_GROUP=crowdcoin_group
 MN_DIR="$ROOT_DIR/$MN_NAME"
 BIN_DIR="$MN_DIR/bin"
 CONF_DIR="$MN_DIR/etc"
-DBROOT_DIR="$MN_DIR/var/lib"
+DBROOT_DIR="$MN_DIR/blockchain"
 RUN_DIR="$MN_DIR/var/run"
 CONF_FILES="$CONF_DIR/node*.conf"
 
