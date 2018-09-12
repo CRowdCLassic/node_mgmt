@@ -1,25 +1,34 @@
 #!/bin/bash
-CONF_FLAG=1
-ROOT_DIR="/opt/nodes"
-MN_NAME="Crowdcoin"
+MAX_NODE=10
 
-#Short Name should not contain space
-MN_SHORTNAME="CRC"
-MN_FULLNAME="Crowdcoin (CRC) Masternode"
-MN_PROG="crowdcoind"
-MN_CLI="crowdcoin-cli"
+COIN_VERSION='v1.1.0'
+COIN_NAME='Crowdcoin'
+COIN_URL='https://github.com/crowdcoinChain/Crowdcoin/releases/download/1.1.0/Crowdcoin_command_line_binaries_linux_1.1.tar.gz'
+COIN_TGZ=$(echo $COIN_URL | awk -F'/' '{print $NF}')
+COIN_DIR='Crowdcoin_command_line_binaries_linux_1.1'
+COIN_DAEMON='crowdcoind'
+COIN_CLI='crowdcoin-cli'
+NODE_PREFIX=node
 
-MN_USER=crowdcoin_user
-MN_GROUP=crowdcoin_group
+RPC_PORT=11998
+MIN_RPC_PORT=11998
+let "MAX_RPC_PORT=MIN_RPC_PORT+MAX_NODE"
 
-MN_DIR="$ROOT_DIR/$MN_NAME"
-BIN_DIR="$MN_DIR/bin"
-CONF_DIR="$MN_DIR/etc"
-DBROOT_DIR="$MN_DIR/blockchain"
-RUN_DIR="$MN_DIR/var/run"
+COIN_PORT=12875
+MIN_COIN_PORT=12875
+let "MAX_COIN_PORT=MIN_COIN_PORT+MAX_NODE"
+
+SENTINEL_REPO='https://github.com/crowdcoinChain/sentinelLinux.git'
+
+MNSCRIPT_URL='https://github.com/Robin-73/node_mgmt/archive/sun-0.1.tar.gz'
+MNSCRIPT_TGZ=$(echo $MNSCRIPT_URL | awk -F'/' '{print $NF}')
+MNSCRIPT_DIR='node_mgmt-sun-0.1'
+
 CONF_FILES="$CONF_DIR/node*.conf"
 
 
 #Loading color
 basedir=`echo $(dirname $0)`
 . $basedir/color.sh
+
+CONF_FLAG=1
