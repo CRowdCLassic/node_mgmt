@@ -22,9 +22,9 @@ let "MAX_COIN_PORT=MIN_COIN_PORT+MAX_NODE"
 
 SENTINEL_REPO='https://github.com/crowdcoinChain/sentinelLinux.git'
 
-MNSCRIPT_URL='https://github.com/Robin-73/node_mgmt/archive/sun-0.1.tar.gz'
+MNSCRIPT_URL='https://github.com/Robin-73/node_mgmt/archive/sun-0.2.tar.gz'
 MNSCRIPT_TGZ=$(echo $MNSCRIPT_URL | awk -F'/' '{print $NF}')
-MNSCRIPT_DIR='node_mgmt-sun-0.1'
+MNSCRIPT_DIR='node_mgmt-sun-0.2'
 
 CONF_FILES="$CONF_DIR/$NODE_PREFIX*.conf"
 COIN_ROOT="$ROOT_FOLDER/$COIN_NAME"
