@@ -31,20 +31,20 @@ function d_start ()
 	for CONF in $CONF_FILES
 	do
 	 NODE=`basename $CONF .conf`
-	 DATA_DIR=$DBROOT_DIR/$NODE
-	 PIDFILE=$RUN_DIR/$NODE.pid
-	 cd $MN_DIR
+	 DATA_DIR=$COIN_BLOCKCHAIN/$NODE
+	 PIDFILE=$COIN_PID/$NODE.pid
+	 cd $COIN_ROOT
 	 #Create database folder if not exist
          if [[ ! -e $DATA_DIR ]]; then
                 mkdir -p $DATA_DIR
          fi
 
-         if [[ ! -e $RUN_DIR ]]; then
-                mkdir -p $RUN_DIR
+         if [[ ! -e $COIN_PID ]]; then
+                mkdir -p $COIN_PID
          fi
-	 echo  "Masternode $MN_NAME $NODE : starting..."
+	 echo  "Masternode $COIN_NAME $NODE : starting..."
 	 #echo "$BIN_DIR/$MN_PROG -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $REINDEX"
-	 $BIN_DIR/$MN_PROG -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $REINDEX
+	 $COIN_BIN/$COIN_DAEMON -pid=$PIDFILE -conf=$CONF -datadir=$DATA_DIR $REINDEX
 	 sleep  1 
 	done
 }
@@ -55,10 +55,10 @@ function d_stop ()
 	for CONF in $CONF_FILES
 	do
 	 NODE=`basename $CONF .conf`
-	 DATA_DIR=$DBROOT_DIR/$NODE
-	 PIDFILE=$RUN_DIR/$NODE.pid
-	 echo  "Masternode $MN_NAME $NODE : stopping (PID = $(cat $PIDFILE) )" 
-	 $BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR stop
+	 DATA_DIR=$COIN_BLOCKCHAIN/$NODE
+	 PIDFILE=$COIN_PID/$NODE.pid
+	 echo  "Masternode $COIN_NAME $NODE : stopping (PID = $(cat $PIDFILE) )" 
+	 $COIN_BIN/$COIN_CLI -conf=$CONF -datadir=$DATA_DIR stop
 	done
 }
 
@@ -68,9 +68,9 @@ function d_status ()
 	for CONF in $CONF_FILES
 	do
 	 NODE=`basename $CONF .conf`
-	 DATA_DIR=$DBROOT_DIR/$NODE
-	 PIDFILE=$RUN_DIR/$NODE.pid
-	 MN_DEBUG=`$BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR masternode debug 2>&1`
+	 DATA_DIR=$COIN_BLOCKCHAIN/$NODE
+	 PIDFILE=$COIN_PID/$NODE.pid
+	 MN_DEBUG=`$COIN_BIN/$COIN_CLI -conf=$CONF -datadir=$DATA_DIR masternode debug 2>&1`
 	 if [[ $? = 0 ]] ; then
 		MN_CONF="OK"
 		if [[ $MN_DEBUG = "Masternode successfully started"  ]]; then
@@ -83,7 +83,7 @@ function d_status ()
 		MN_DEBUG=`echo -e "${Red}${MN_DEBUG}${Color_Off}"`
 	 fi
 
-	 MNSYNC=`$BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR mnsync status 2>&1`
+	 MNSYNC=`$COIN_BIN/$COIN_CLI -conf=$CONF -datadir=$DATA_DIR mnsync status 2>&1`
 	 if [[ $? = 0 ]] ; then
 		MN_SYNC="OK"
 		SYNC_STATUS=`echo $MNSYNC | jsonValue "AssetName"`
@@ -92,7 +92,7 @@ function d_status ()
 		SYNC_STATUS="NA";
 	 fi
 	 
-	 GETINFO=`$BIN_DIR/$MN_CLI -conf=$CONF -datadir=$DATA_DIR getinfo 2>&1`
+	 GETINFO=`$COIN_BIN/$COIN_CLI -conf=$CONF -datadir=$DATA_DIR getinfo 2>&1`
 	 if [[ $? = 0 ]] ; then
 		MN_GETINFO="OK"
 	 	BLOCKS=`echo $GETINFO | jsonValue blocks`
@@ -162,9 +162,9 @@ fi
 
 #Get scope of the command 
 if [[ ${NODE:+1} ]] ; then
-	CONF_FILES="$MN_DIR/etc/$NODE.conf"
+	CONF_FILES="$COIN_CONF/$NODE.conf"
 else 
-	CONF_FILES="$MN_DIR/etc/node*.conf"
+	CONF_FILES="$COIN_CONF/node*.conf"
 	if [[ $MODE != "silent"  ]]; then 
 	  while true; do
 		read -p "Are you sure you want to run the command on all nodes ? [Y] | N : " yn
