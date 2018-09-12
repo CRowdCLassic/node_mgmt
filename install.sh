@@ -23,9 +23,9 @@ MAX_COIN_PORT=12876
 
 SENTINEL_REPO='https://github.com/crowdcoinChain/sentinelLinux.git'
 
-MNSCRIPT_URL='https://github.com/Robin-73/node_mgmt/archive/sun-0.1.tar.gz'
+MNSCRIPT_URL='https://github.com/Robin-73/node_mgmt/archive/sun-0.2.tar.gz'
 MNSCRIPT_TGZ=$(echo $MNSCRIPT_URL | awk -F'/' '{print $NF}')
-MNSCRIPT_DIR='node_mgmt-sun-0.1'
+MNSCRIPT_DIR='node_mgmt-sun-0.2'
 
 COIN_ROOT=$ROOT_FOLDER/$COIN_NAME
 COIN_BIN=$COIN_ROOT/bin
