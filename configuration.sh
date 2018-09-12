@@ -1,4 +1,6 @@
 #!/bin/bash
+ROOT_FOLDER="/opt/wallet"
+
 MAX_NODE=10
 
 COIN_VERSION='v1.1.0'
@@ -24,7 +26,12 @@ MNSCRIPT_URL='https://github.com/Robin-73/node_mgmt/archive/sun-0.1.tar.gz'
 MNSCRIPT_TGZ=$(echo $MNSCRIPT_URL | awk -F'/' '{print $NF}')
 MNSCRIPT_DIR='node_mgmt-sun-0.1'
 
-CONF_FILES="$CONF_DIR/node*.conf"
+CONF_FILES="$CONF_DIR/$NODE_PREFIX*.conf"
+COIN_ROOT="$ROOT_FOLDER/$COIN_NAME"
+COIN_BIN="$COIN_ROOT/bin"
+COIN_CONF="$COIN_ROOT/etc"
+COIN_BLOCKCHAIN="$COIN_ROOT/blockchain"
+COIN_PID="$COIN_ROOT/var/run"
 
 
 #Loading color
